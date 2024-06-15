@@ -12,6 +12,23 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: 'Get default branch name'
+      id: default_branch
+      uses: svs-tm/libraries.github.actions/github/get-default-branch@main
+      with:
+        repository: ${{ github.event.repository.name }}
+        owner: ${{ github.repository_owner }}
+        token: ${{ secrets.ORGANIZATION_TOKEN }}
+
+    - name: 'Create release branch'
+      uses: svs-tm/libraries.github.actions/github/create-branch@main
+      with:
+        repository: ${{ github.event.repository.name }}
+        owner: ${{ github.repository_owner }}
+        token: ${{ secrets.ORGANIZATION_TOKEN }}
+        from: ${{ steps.default_branch.outputs.name }}
+        name: 'release'
       
     - name: 'Update repository properties'
       uses: svs-tm/libraries.github.actions/github/update-repository@main
