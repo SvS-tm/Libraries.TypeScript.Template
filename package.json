@@ -4,6 +4,9 @@
   "author": "SvS team",
   "description": "Template for TS library",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "SvS",
     "template"
