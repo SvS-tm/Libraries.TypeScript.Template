@@ -19,34 +19,17 @@ jobs:
       with:
         repository: ${{ github.event.repository.name }}
         owner: ${{ github.repository_owner }}
-        token: ${{ github.token }}
+        token: ${{ secrets.ORGANIZATION_TOKEN }}
 
     - name: 'Create release branch'
       uses: svs-tm/libraries.github.actions/github/create-branch@main
       with:
         repository: ${{ github.event.repository.name }}
         owner: ${{ github.repository_owner }}
-        token: ${{ github.token }}
+        token: ${{ secrets.ORGANIZATION_TOKEN }}
         from: ${{ steps.default_branch.outputs.name }}
         name: 'release'
-      
-    - name: 'Update repository properties'
-      uses: svs-tm/libraries.github.actions/github/update-repository@main
-      with:
-        repository: ${{ github.event.repository.name }}
-        owner: ${{ github.repository_owner }}
-        token: ${{ github.token }}
-        delete_branch_on_merge: true
-        allow_auto_merge: true
 
-    - name: 'Import default ruleset'
-      uses: svs-tm/libraries.github.actions/github/create-ruleset@main
-      with:
-        owner: ${{ github.repository_owner }}
-        repository: ${{ github.event.repository.name }}
-        ruleset_path: '${{ github.workspace }}/.github/rulesets/main.json'
-        token: ${{ github.token }}
-    
     - name: 'Add repository to team'
       uses: svs-tm/libraries.github.actions/github/add-repository-to-team@main
       with:
@@ -54,7 +37,7 @@ jobs:
         owner: ${{ github.repository_owner }}
         repository: ${{ github.event.repository.name }}
         team_slug: 'svs'
-        token: ${{ github.token }}
+        token: ${{ secrets.ORGANIZATION_TOKEN }}
         permission: 'admin'
     
     - name: 'Get libraries node_id'
@@ -63,12 +46,28 @@ jobs:
       with:
         organization: ${{ github.event.organization.login }}
         project: ${{ vars.PROJECT_LIBRARIES_NUMBER }}
-        token: ${{ github.token }}
+        token: ${{ secrets.ORGANIZATION_TOKEN }}
 
     - name: 'Link repository to Libraries'
       uses: svs-tm/libraries.github.actions/github/link-repository-to-project@main
       with:
         project: ${{ steps.libraries.outputs.node_id }}
         repository: ${{ github.event.repository.node_id }}
-        token: ${{ github.token }}
-  
+        token: ${{ secrets.ORGANIZATION_TOKEN }}
+      
+    - name: 'Import default ruleset'
+      uses: svs-tm/libraries.github.actions/github/create-ruleset@main
+      with:
+        owner: ${{ github.repository_owner }}
+        repository: ${{ github.event.repository.name }}
+        ruleset_path: '${{ github.workspace }}/.github/rulesets/main.json'
+        token: ${{ secrets.ORGANIZATION_TOKEN }}  
+
+    - name: 'Update repository properties'
+      uses: svs-tm/libraries.github.actions/github/update-repository@main
+      with:
+        repository: ${{ github.event.repository.name }}
+        owner: ${{ github.repository_owner }}
+        token: ${{ secrets.ORGANIZATION_TOKEN }}
+        delete_branch_on_merge: true
+        allow_auto_merge: true
